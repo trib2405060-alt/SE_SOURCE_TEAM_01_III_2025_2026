@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Thay đổi tìm kiếm</title>
+    <style>
+        /* Phong cách tổng thể - Đồng bộ với hệ thống Wanderlust */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4ECE1; /* Nền beige sáng */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Khung Modal Thay đổi tìm kiếm */
+        .search-modal {
+            background-color: #FAF6F0; /* Màu giấy cổ điển */
+            border: 2px solid #5C4033; /* Viền nâu đậm */
+            border-radius: 8px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 25px rgba(92, 64, 51, 0.15);
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Tiêu đề */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #5C4033;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            color: #5C4033;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8B7355;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #5C4033;
+        }
+
+        /* Chọn loại hành trình (Radio) */
+        .journey-type {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-label {
+            color: #5C4033;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-label input[type="radio"] {
+            accent-color: #5C4033; /* Đổi màu nút radio sang nâu */
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Layout Grid cho các ô nhập liệu */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* Nhóm ô nhập liệu */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-group label {
+            color: #5C4033;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            background-color: #FFFFFF;
+            border: 1px solid #CDBA96;
+            border-radius: 4px;
+            padding: 12px;
+            color: #333333;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #5C4033;
+            box-shadow: 0 0 5px rgba(92, 64, 51, 0.1);
+        }
+
+        /* Trạng thái ô bị vô hiệu hóa (khi chọn Một chiều) */
+        .input-group.disabled label {
+            color: #A1907E;
+        }
+        .input-group.disabled input {
+            background-color: #EAE3D2;
+            border-color: #D3C5B5;
+            color: #A1907E;
+            cursor: not-allowed;
+        }
+
+        /* Nút Tìm Kiếm Lại */
+        .submit-btn {
+            background-color: #5C4033; /* Màu nâu thương hiệu */
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #4A3329;
+        }
+
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <h2 class="modal-title">Thay đổi thông tin tìm kiếm</h2>
+            <button class="close-btn" title="Đóng">&times;</button>
+        </div>
+
+        <form id="changeSearchForm" onsubmit="handleSubmit(event)">
+            <!-- Loại hành trình (FR-03.1 & RN-1) -->
+            <div class="journey-type">
+                <label class="radio-label">
+                    <input type="radio" name="ticketType" value="oneway" checked onclick="toggleReturnDate(false)">
+                    Một chiều
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="ticketType" value="roundtrip" onclick="toggleReturnDate(true)">
+                    Khứ hồi
+                </label>
+            </div>
+
+            <!-- Grid Chuyến bay (FR-03.1) -->
+            <div class="form-grid">
+                <!-- Điểm đi -->
+                <div class="input-group">
+                    <label for="departure">Điểm đi *</label>
+                    <select id="departure" required>
+                        <option value="HAN" selected>Hà Nội (HAN)</option>
+                        <option value="SGN">TP. Hồ Chí Minh (SGN)</option>
+                        <option value="DAD">Đà Nẵng (DAD)</option>
+                        <option value="CXR">Nha Trang (CXR)</option>
+                    </select>
+                </div>
+
+                <!-- Điểm đến -->
+                <div class="input-group">
+                    <label for="destination">Điểm đến *</label>
+                    <select id="destination" required>
+                        <option value="HAN">Hà Nội (HAN)</option>
+                        <option value="SGN" selected>TP. Hồ Chí Minh (SGN)</option>
+                        <option value="DAD">Đà Nẵng (DAD)</option>
+                        <option value="CXR">Nha Trang (CXR)</option>
+                    </select>
+                </div>
+
+                <!-- Ngày khởi hành -->
+                <div class="input-group">
+                    <label for="departDate">Ngày khởi hành *</label>
+                    <input type="date" id="departDate" value="2026-10-18" required>
+                </div>
+
+                <!-- Ngày về (Tương thích RN-1) -->
+                <div class="input-group disabled" id="returnDateGroup">
+                    <label for="returnDate">Ngày về</label>
+                    <input type="date" id="returnDate" value="" disabled>
+                </div>
+
+                <!-- Số hành khách -->
+                <div class="input-group">
+                    <label for="passengers">Số hành khách *</label>
+                    <select id="passengers" required>
+                        <option value="1" selected>1 Hành khách</option>
+                        <option value="2">2 Hành khách</option>
+                        <option value="3">3 Hành khách</option>
+                        <option value="4">4 Hành khách</option>
+                    </select>
+                </div>
+
+                <!-- Hạng vé -->
+                <div class="input-group">
+                    <label for="ticketClass">Hạng vé *</label>
+                    <select id="ticketClass" required>
+                        <option value="economy" selected>Hạng Phổ thông</option>
+                        <option value="business">Hạng Thương gia</option>
+                        <option value="first">Hạng Nhất</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <button type="submit" class="submit-btn">
+                Tìm kiếm lại ➔
+            </button>
+        </form>
+    </div>
+
+    <!-- JavaScript xử lý tương tác giao diện -->
+    <script>
+        // Hàm ẩn/hiện và kích hoạt/vô hiệu hóa ô Ngày về dựa trên loại vé (RN-1)
+        function toggleReturnDate(isRoundTrip) {
+            const returnGroup = document.getElementById('returnDateGroup');
+            const returnInput = document.getElementById('returnDate');
+            
+            if (isRoundTrip) {
+                returnGroup.classList.remove('disabled');
+                returnInput.removeAttribute('disabled');
+                returnInput.setAttribute('required', 'required');
+                // Gợi ý ngày về mặc định sau ngày đi 3 ngày
+                returnInput.value = "2026-10-21"; 
+            } else {
+                returnGroup.classList.add('disabled');
+                returnInput.setAttribute('disabled', 'disabled');
+                returnInput.removeAttribute('required');
+                returnInput.value = "";
+            }
+        }
+
+        // Xử lý khi người dùng nhấn nút "Tìm kiếm lại"
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+            const departDate = document.getElementById('departDate').value;
+            const returnDate = document.getElementById('returnDate').value;
+            const passengers = document.getElementById('passengers').value;
+            const ticketClass = document.getElementById('ticketClass').value;
+
+            // Kiểm tra ràng buộc logic điểm đi và điểm đến không được trùng nhau
+            if (departure === destination) {
+                alert("Điểm đi và Điểm đến không được trùng nhau. Vui lòng chọn lại!");
+                return;
+            }
+
+            alert(`Hệ thống đang tìm kiếm lại chuyến bay từ ${departure} đến ${destination}...\n(Dữ liệu được cập nhật theo thời gian thực)`);
+            // Tại đây bạn có thể gọi hàm cập nhật giao diện chính hoặc redirect/gọi API (FR-03.2)
+        }
+    </script>
+</body>
+</html>

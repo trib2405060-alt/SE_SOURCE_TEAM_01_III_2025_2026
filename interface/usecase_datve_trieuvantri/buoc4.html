@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Hoàn Tất Lịch Trình</title>
+    <!-- Tích hợp Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tích hợp Google Fonts cho phần nội dung (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f6f4ee; 
+        }
+        
+        /* Cải thiện hiển thị font chữ */
+        h1, h2, h3, p, span {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="text-[#333333] min-h-screen pb-12">
+
+    <!-- HEADER -->
+    <header class="bg-[#3a271d] text-white py-4 px-8 flex justify-between items-center shadow-md relative z-10">
+        <!-- Logo & Subtitle -->
+        <div class="flex flex-col">
+            <h1 class="text-3xl text-[#f3ebde] tracking-wider italic font-bold" style="font-family: 'Times New Roman', Times, serif;">Wanderlust</h1>
+            <span class="text-[0.65rem] text-gray-400 uppercase tracking-widest mt-1">Hệ thống hỗ trợ du lịch</span>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="flex space-x-8 text-sm font-medium items-center ml-12">
+            <a href="#" class="hover:text-[#d4b595] transition">Trang chủ</a>
+            <a href="#" class="hover:text-[#d4b595] transition">Tìm kiếm địa điểm</a>
+            <!-- Active Link: Lập kế hoạch -->
+            <a href="#" class="text-[#f3ebde] border-b border-[#f3ebde] pb-1">Lập kế hoạch</a>
+            <a href="#" class="hover:text-[#d4b595] transition">Đặt vé máy bay</a>
+            <a href="#" class="hover:text-[#d4b595] transition">Đặt phòng</a>
+        </nav>
+
+        <!-- User Greeting -->
+        <div class="text-sm text-[#a38a70]">
+            Chào, <span class="text-[#f3ebde]">Lữ khách phương xa</span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-5xl mx-auto mt-12 px-4">
+        
+        <!-- STEPPER (THANH TIẾN TRÌNH) -->
+        <div class="relative flex justify-between items-start w-11/12 mx-auto mb-10">
+            <!-- Đường kẻ ngang nối các bước -->
+            <div class="absolute top-5 left-0 w-full h-[2px] bg-[#d5cfc5] -z-10"></div>
+
+            <!-- Bước 1 (Completed) -->
+            <div class="flex flex-col items-center w-1/4">
+                <div class="w-10 h-10 rounded-full bg-[#8c6746] text-white flex items-center justify-center font-bold text-sm shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <span class="text-[0.65rem] uppercase font-bold text-[#8c6746] mt-3 tracking-wider">Khởi tạo yêu cầu</span>
+            </div>
+
+            <!-- Bước 2 (Completed) -->
+            <div class="flex flex-col items-center w-1/4">
+                <div class="w-10 h-10 rounded-full bg-[#8c6746] text-white flex items-center justify-center font-bold text-sm shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <span class="text-[0.65rem] uppercase font-bold text-[#8c6746] mt-3 tracking-wider">Hệ thống Phân tích</span>
+            </div>
+
+            <!-- Bước 3 (Completed) -->
+            <div class="flex flex-col items-center w-1/4">
+                <div class="w-10 h-10 rounded-full bg-[#8c6746] text-white flex items-center justify-center font-bold text-sm shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <span class="text-[0.65rem] uppercase font-bold text-[#8c6746] mt-3 tracking-wider">Tùy chỉnh lịch trình</span>
+            </div>
+
+            <!-- Bước 4 (Active) -->
+            <div class="flex flex-col items-center w-1/4">
+                <div class="w-10 h-10 rounded-full bg-[#7a5c43] text-white flex items-center justify-center font-bold text-sm shadow-md ring-4 ring-[#e5dfd3]">4</div>
+                <span class="text-[0.65rem] uppercase font-bold text-[#5c4a3d] mt-3 tracking-wider">Lưu & Đặt dịch vụ</span>
+            </div>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="bg-white p-2 shadow-sm mb-12">
+            <!-- Lớp viền nét đứt bên trong -->
+            <div class="border border-dashed border-[#d5cfc5] p-10">
+                
+                <!-- Tiêu đề Bước 4 (Dùng font hệ thống để chống lỗi tách chữ hoàn toàn) -->
+                <div class="mb-8 border-b border-gray-100 pb-5">
+                    <h2 class="text-3xl text-[#3a271d] font-bold mb-2" style="font-family: 'Times New Roman', Times, serif;">
+                        4. Hoàn Tất Lịch Trình & Đặt Dịch Vụ
+                    </h2>
+                    <p class="text-sm text-gray-500">
+                        Lịch trình của bạn đã được tối ưu hóa. Xem lại tổng quan chuyến đi và tiến hành đặt các dịch vụ cần thiết.
+                    </p>
+                </div>
+
+                <!-- THẺ TỔNG QUAN CHUYẾN ĐI -->
+                <div class="bg-[#fcfaf7] border border-[#e8e4db] rounded-lg p-6 mb-10 relative shadow-sm">
+                    <!-- Badge Ngày đêm -->
+                    <div class="absolute top-6 right-6 bg-[#f3ebde] text-[#7a5c43] text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wider">
+                        4 Ngày 3 Đêm
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-[#3a271d] mb-1" style="font-family: 'Times New Roman', Times, serif;">Du Lịch Côn Đảo</h3>
+                    <p class="text-sm text-gray-500 mb-5">Chủ đề: Khám phá thiên nhiên, ẩm thực địa phương</p>
+                    
+                    <div class="flex items-center gap-8 text-sm text-gray-600 border-t border-gray-200 pt-4">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span>Thời gian: <span class="font-medium text-gray-800">17/03/2027 - 20/03/2027</span></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Ngân sách dự kiến: <span class="font-medium text-[#8c6746]">~ 3.000.000 VND</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DÒNG THỜI GIAN (TIMELINE) -->
+                <div class="pl-4">
+                    <div class="relative border-l-2 border-[#e8e4db] pl-6 space-y-10 pb-8">
+                        
+                        <!-- Ngày 1 -->
+                        <div class="relative">
+                            <!-- Nút chấm tròn trên trục -->
+                            <div class="absolute w-4 h-4 bg-[#a38a70] rounded-full -left-[33px] top-1.5 border-4 border-white shadow-sm"></div>
+                            
+                            <h4 class="text-lg font-bold text-[#3a271d] mb-3">Ngày 1: 17/03/2027 - Chào Côn Đảo</h4>
+                            <div class="space-y-2 text-sm text-gray-600 leading-relaxed">
+                                <p><span class="font-semibold text-gray-800">Sáng:</span> Di chuyển bằng máy bay hạ cánh tại Sân bay Cỏ Ống. Check-in khách sạn, nhận phòng và nghỉ ngơi.</p>
+                                <p><span class="font-semibold text-gray-800">Chiều:</span> Tắm biển tại Bãi Đầm Trầu - bãi biển đẹp nhất Côn Đảo.</p>
+                                <p><span class="font-semibold text-gray-800">Tối:</span> Thưởng thức các món hải sản mang đậm hương vị vùng miền tại trung tâm thị trấn.</p>
+                            </div>
+                            
+                            <!-- Nhãn Gợi ý dịch vụ -->
+                            <div class="mt-4 inline-flex items-center gap-2 bg-[#fdfaf7] border border-[#f3ebde] text-[#8c6746] text-xs px-3 py-1.5 rounded shadow-sm">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 7h-2V6a4 4 0 0 0-8 0v1H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM11 6a2 2 0 1 1 4 0v1h-4V6zm-4 3h12v10H7V9zm5 2h2v6h-2v-6z"></path></svg>
+                                <span>Gợi ý đặt phòng: Khách sạn khu vực đường Tôn Đức Thắng</span>
+                            </div>
+                        </div>
+
+                        <!-- Ngày 2 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-[#d5cfc5] rounded-full -left-[33px] top-1.5 border-4 border-white shadow-sm"></div>
+                            <h4 class="text-lg font-bold text-[#3a271d] mb-3">Ngày 2: 18/03/2027 - Tìm hiểu Lịch sử</h4>
+                            <div class="space-y-2 text-sm text-gray-600 leading-relaxed">
+                                <p><span class="font-semibold text-gray-800">Sáng:</span> Tham quan hệ thống Di tích Lịch sử Nhà tù Côn Đảo (Trại Phú Hải, Chuồng Cọp Pháp/Mỹ).</p>
+                                <p><span class="font-semibold text-gray-800">Chiều:</span> Viếng Nghĩa trang Hàng Dương và mộ Cô Sáu.</p>
+                                <p><span class="font-semibold text-gray-800">Tối:</span> Tự do dạo biển, thưởng thức cafe view biển.</p>
+                            </div>
+                        </div>
+
+                        <!-- Ngày 3 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-[#e5dfd3] rounded-full -left-[33px] top-1.5 border-4 border-white"></div>
+                            <h4 class="text-lg font-medium text-gray-400">Ngày 3: 19/03/2027 - ...</h4>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CÁC NÚT HÀNH ĐỘNG (Nằm góc dưới cùng bên phải) -->
+                <div class="flex justify-end items-center gap-4 mt-8 pt-6 border-t border-gray-200">
+                    
+                    <!-- Nút 11: Chỉnh sửa lại -->
+                    <button type="button" class="border border-[#d5cfc5] text-gray-500 hover:bg-gray-50 hover:text-gray-700 font-medium py-2.5 px-6 rounded transition duration-200 text-sm">
+                        Chỉnh sửa lại
+                    </button>
+                    
+                    <!-- Nút 12: Lưu Lịch Trình -->
+                    <button type="button" class="border-2 border-[#8c6746] text-[#8c6746] hover:bg-[#fcfaf7] font-medium py-2.5 px-8 rounded transition duration-200 text-sm">
+                        Lưu Lịch Trình
+                    </button>
+                    
+                    <!-- Nút 13: Tiến hành Đặt Dịch Vụ -->
+                    <button type="button" class="bg-[#8c6746] hover:bg-[#725236] text-white font-medium py-3 px-8 rounded transition duration-200 shadow-sm text-sm">
+                        Tiến hành Đặt Dịch Vụ
+                    </button>
+                    
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Hệ Thống Hỗ Trợ Du Lịch Cổ Điển</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-main: #F4EFE6;
+            --bg-card: #FFFFFF;
+            --header-bg: #4A3525;
+            --header-text: #F4EFE6;
+            --header-accent: #D4B28C;
+            --primary-brown: #8C6239;
+            --primary-hover: #724E2B;
+            --text-dark: #3A2B1E;
+            --text-muted: #7A6C5D;
+            --border-dashed: #C8BEAC;
+            --border-light: #E2DACD;
+            --shadow-subtle: 0 10px 30px rgba(74, 53, 37, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        .serif-font {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 26px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .brand-subtitle {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--header-accent);
+            margin-top: -2px;
+        }
+
+        nav ul {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        nav a {
+            font-size: 14px;
+            font-weight: 500;
+            color: #E2DACD;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #FFFFFF;
+            border-bottom-color: var(--header-accent);
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #D8CEBE;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 20px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(rgba(74, 53, 37, 0.45), rgba(74, 53, 37, 0.65)),
+                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            padding: 90px 20px 140px;
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .hero-subtitle {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--header-accent);
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 46px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            line-height: 1.25;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            max-width: 680px;
+            margin: 0 auto 30px;
+            color: #F4EFE6;
+        }
+
+        /* DESTINATIONS */
+        .section-container {
+            max-width: 1200px;
+            margin: 60px auto 80px;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-tag {
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: var(--text-dark);
+        }
+
+        .dest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 25px;
+        }
+
+        .dest-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dest-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(74, 53, 37, 0.12);
+        }
+
+        /* KHUNG CHỨA ẢNH & XỬ LÝ FALLBACK (CHỈ HIỆN CHỮ KHI ẢNH LỖI) */
+        .dest-img-wrapper {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #E6DFD5 0%, #D3C2B0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Mặc định chữ fallback bị ẩn đi khi ảnh load bình thường */
+        .dest-img-fallback {
+            display: none;
+            position: absolute;
+            color: var(--primary-brown);
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: bold;
+            font-style: italic;
+            text-align: center;
+            padding: 0 10px;
+            z-index: 1;
+        }
+
+        .dest-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dest-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background: #FFFFFF;
+        }
+
+        .dest-title {
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .dest-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .dest-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-light);
+        }
+
+        .dest-price {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .dest-price span {
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--primary-brown);
+        }
+
+        .btn-outline {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-brown);
+            padding: 6px 14px;
+            border: 1px solid var(--primary-brown);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-brown);
+            color: #FFFFFF;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 60px 5% 30px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+        }
+
+        .footer-title {
+            font-size: 16px;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--header-accent);
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            color: #D8CEBE;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #A89B8C;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER NAVIGATION -->
+    <header>
+        <div class="brand">
+            <span class="brand-logo">Wanderlust</span>
+            <span class="brand-subtitle">HỆ THỐNG HỖ TRỢ DU LỊCH CỔ ĐIỂN</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Trang chủ</a></li>
+                <li><a href="tim_kiem.html">Tìm kiếm địa điểm</a></li>
+                <li><a href="lap_ke_hoach.html">Lập kế hoạch</a></li>
+                <li><a href="dat_ve.html">Đặt vé máy bay</a></li>
+                <li><a href="dat_phong.html">Đặt phòng</a></li>
+            </ul>
+        </nav>
+
+        <div class="user-greeting">
+            <i class="fa-regular fa-compass"></i>
+            <span>Chào, Lữ khách phương xa</span>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <p class="hero-subtitle">HÀNH TRÌNH CỔ ĐIỂN &bull; TRẢI NGHIỆM BẤT TẬN</p>
+        <h1 class="hero-title">Khám Phá Thế Giới Theo Phong Cách Cổ Điển Sang Trọng</h1>
+        <p class="hero-desc">Trợ lý du lịch thông minh đồng hành cùng bạn trên từng cây số: Tra cứu chuyến bay, đặt
+            phòng khách sạn và thiết kế hành trình độc bản.</p>
+    </section>
+
+    <!-- FEATURED DESTINATIONS -->
+    <section class="section-container" id="destinations">
+        <div class="section-header">
+            <span class="section-tag">ĐIỂM ĐẾN HOT NHẤT 2026</span>
+            <h2 class="section-title">Những Hành Trình Cổ Điển Nổi Bật</h2>
+        </div>
+
+        <div class="dest-grid">
+            <!-- Card 2: Cầu Vàng Đà Nẵng -->
+            <div class="dest-card">
+                <div class="dest-img-wrapper">
+                    <span class="dest-img-fallback">Cầu Vàng Đà Nẵng</span>
+                    <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=600&q=80"
+                        alt="Cầu Vàng Đà Nẵng" class="dest-img"
+                        onerror="this.style.display='none'; this.previousElementSibling.style.display='block';">
+                </div>
+                <div class="dest-body">
+                    <h3 class="dest-title">Cầu Vàng Đà Nẵng</h3>
+                    <p class="dest-desc">Kiến trúc độc đáo với đôi bàn tay khổng lồ nâng nhịp cầu giữa mây trời Bà Nà.
+                    </p>
+                    <div class="dest-footer">
+                        <div class="dest-price">Từ <span>1.890.000đ</span></div>
+                        <a href="tim_kiem.html" class="btn-outline">Khám phá</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Vịnh Hạ Long -->
+            <div class="dest-card">
+                <div class="dest-img-wrapper">
+                    <span class="dest-img-fallback">Vịnh Hạ Long</span>
+                    <img src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=600&q=80"
+                        alt="Vịnh Hạ Long" class="dest-img"
+                        onerror="this.style.display='none'; this.previousElementSibling.style.display='block';">
+                </div>
+                <div class="dest-body">
+                    <h3 class="dest-title">Vịnh Hạ Long</h3>
+                    <p class="dest-desc">Kỳ quan thiên nhiên thế giới với hàng ngàn đảo đá kỳ vĩ giữa làn nước xanh ngọc
+                        bích.</p>
+                    <div class="dest-footer">
+                        <div class="dest-price">Từ <span>2.100.000đ</span></div>
+                        <a href="tim_kiem.html" class="btn-outline">Khám phá</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="brand-logo">Wanderlust</div>
+                <p>Hệ thống hỗ trợ du lịch phong cách cổ điển sang trọng. Đồng hành cùng lữ khách tạo nên những chuyến
+                    đi đáng nhớ.</p>
+            </div>
+            <div>
+                <h4 class="footer-title">Khám Phá</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="tim_kiem.html">Điểm đến cổ điển</a></li>
+                    <li><a href="lap_ke_hoach.html">Lập lịch trình</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Dịch Vụ</h4>
+                <ul class="footer-links">
+                    <li><a href="dat_ve.html">Đặt vé máy bay</a></li>
+                    <li><a href="dat_phong.html">Đặt phòng khách sạn</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Liên Hệ</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-solid fa-envelope"></i> contact@wanderlust.vn</a></li>
+                    <li><a href="#"><i class="fa-solid fa-phone"></i> +84 (0) 1800 6886</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Wanderlust Travel System. Tất cả quyền được bảo lưu.</span>
+            <span>Thiết kế theo phong cách Vintage Travel</span>
+        </div>
+    </footer>
+
+</body>
+
+</html>

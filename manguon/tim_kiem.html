@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Tìm Kiếm Địa Điểm Cổ Điển</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Quicksand:wght@400..700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Bảng Màu Chủ Đạo Nâu & Vintage Style --- */
+        :root {
+            --primary-dark: #4A3525; /* Nâu đậm cổ điển */
+            --primary-medium: #8C6239; /* Nâu đất chủ đạo */
+            --primary-light: #C6A17B; /* Nâu sáng/vàng cát */
+            --bg-cream: #F4EFE6; /* Nền giấy cũ, ấm áp */
+            --bg-card: #FFFFFF; /* Trắng thuần cho vùng nhập liệu */
+            --text-dark: #2B1D11; /* Màu chữ nâu đen mộc mạc */
+            --text-muted: #6E5D4F; /* Chữ ghi chú nhẹ */
+            --border-color: #D3C2B0; /* Viền mỏng màu cát */
+            --accent-green: #556B2F; /* Xanh rêu điểm xuyết hoài niệm */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-image: radial-gradient(rgba(140, 98, 57, 0.04) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        h1, h2, h3, .vintage-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* --- Thanh điều hướng (Navigation Bar) --- */
+        header {
+            background-color: var(--primary-dark);
+            color: var(--bg-cream);
+            padding: 1.2rem 2rem;
+            border-bottom: 4px double var(--primary-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--bg-cream);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .logo span {
+            font-size: 0.75rem;
+            display: block;
+            font-family: 'Quicksand', sans-serif;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            color: var(--bg-cream);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 3px;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary-light);
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        .user-profile {
+            font-size: 0.9rem;
+            border-left: 1px solid var(--primary-medium);
+            padding-left: 1rem;
+            color: var(--primary-light);
+        }
+
+        /* --- Khung Nội dung chính --- */
+        .container {
+            max-width: 1100px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* --- Tiến trình các bước (Steps Indicator) --- */
+        .steps-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            position: relative;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .steps-bar::before {
+            content: '';
+            position: absolute;
+            top: 22px; left: 0; right: 0;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #EFE9DE;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary-medium);
+            border-color: var(--primary-dark);
+            color: #fff;
+            box-shadow: 0 0 0 5px rgba(140, 98, 57, 0.15);
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .step.active .step-label {
+            color: var(--primary-dark);
+        }
+
+        /* --- Khung form chính (Vintage Card) --- */
+        .vintage-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 30px rgba(74, 53, 37, 0.04);
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .vintage-card::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 1px dashed rgba(140, 98, 57, 0.25);
+            pointer-events: none;
+            border-radius: 2px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Bộ lọc loại địa điểm (RN-1) */
+        .radio-container {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .radio-label input[type="radio"] {
+            accent-color: var(--primary-medium);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Grid layout cho form tìm kiếm */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            background-color: #FCFAF7;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary-medium);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(140, 98, 57, 0.1);
+        }
+
+        /* Khu vực Nút bấm */
+        .actions-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn-vintage {
+            background-color: var(--primary-medium);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 2.8rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 4px 8px rgba(74, 53, 37, 0.15);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-vintage:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(74, 53, 37, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            margin-right: 1rem;
+        }
+        .btn-secondary:hover {
+            background-color: #EFE9DE;
+            color: var(--text-dark);
+        }
+
+        /* --- Danh sách địa điểm kết quả (FR-01.2) --- */
+        .results-heading {
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem 0;
+            color: var(--primary-dark);
+            border-left: 4px solid var(--primary-medium);
+            padding-left: 0.5rem;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .place-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .place-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(74, 53, 37, 0.08);
+        }
+
+        .place-img {
+            width: 100%;
+            height: 180px;
+            background-color: #EFE9DE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 2rem;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .place-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-green);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .place-content {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .place-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .place-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-stars {
+            color: #D4AF37; /* Màu vàng kim cổ kính */
+            font-weight: bold;
+        }
+
+        .place-desc {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        /* --- Hộp thoại xem chi tiết (Modal RN-2) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(43, 29, 17, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-cream);
+            border: 2px solid var(--primary-dark);
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 4px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .review-item {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 0.8rem;
+            margin-top: 0.8rem;
+            border-radius: 3px;
+        }
+
+        .no-data-msg {
+            text-align: center;
+            padding: 3rem;
+            background: #fff;
+            border: 1px dashed var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* --- Bảng chân trang (Footer) --- */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 5rem;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; gap: 1rem; text-align: center; }
+            nav { margin: 0.5rem 0; }
+            nav a { margin: 0 0.6rem; }
+            .vintage-card { padding: 1.5rem; }
+            .steps-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1>Wanderlust</h1>
+                <span>Hệ Thống Hỗ Trợ Du Lịch Cổ Điển</span>
+            </div>
+            
+            <!-- ĐÃ CẬP NHẬT LIÊN KẾT TẠI ĐÂY -->
+            <nav>
+                <a href="index.html">Trang chủ</a>
+                <a href="tim_kiem.html" class="active">Tìm kiếm địa điểm</a>
+                <a href="lap_ke_hoach.html">Lập kế hoạch</a>
+                <a href="dat_ve.html">Đặt vé máy bay</a>
+                <a href="dat_phong.html">Đặt phòng</a>
+            </nav>
+            
+            <div class="user-profile">
+                Chào, <strong>Lữ khách phương xa</strong>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="steps-bar">
+            <div class="step active" id="step-1">
+                <div class="step-number">1</div>
+                <div class="step-label">Nhập từ khóa</div>
+            </div>
+            <div class="step" id="step-2">
+                <div class="step-number">2</div>
+                <div class="step-label">Lọc phân loại</div>
+            </div>
+            <div class="step" id="step-3">
+                <div class="step-number">3</div>
+                <div class="step-label">Xem chi tiết</div>
+            </div>
+            <div class="step" id="step-4">
+                <div class="step-number">4</div>
+                <div class="step-label">Gửi đánh giá</div>
+            </div>
+        </div>
+
+        <div class="vintage-card">
+            <h2 class="section-title">🗺 Khám Phá Địa Điểm Dừng Chân</h2>
+           
+            <form id="search-form" onsubmit="handleSearch(event)">
+                
+                <div class="radio-container">
+                    <label class="radio-label">
+                        <input type="radio" name="place-type" value="all" checked onclick="filterType('all')">
+                        Tất cả địa điểm
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="place-type" value="landmark" onclick="filterType('landmark')">
+                        Danh lam cổ kính
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="place-type" value="restaurant" onclick="filterType('restaurant')">
+                        Quán ăn truyền thống
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="place-type" value="cafe" onclick="filterType('cafe')">
+                        Quán cà phê hoài niệm
+                    </label>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="search-keyword">Từ khóa tìm kiếm / Tên địa điểm</label>
+                        <input type="text" id="search-keyword" placeholder="Ví dụ: Hồ Gươm, Phố Cổ, Bến Thành...">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-region">Khu vực / Tỉnh thành</label>
+                        <select id="search-region">
+                            <option value="">-- Tất cả khu vực --</option>
+                            <option value="HAN">Hà Nội</option>
+                            <option value="SGN">TP. Hồ Chí Minh</option>
+                            <option value="DAD">Đà Nẵng</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="actions-container">
+                    <button type="submit" class="btn-vintage">Tìm địa điểm tương thích ➔</button>
+                </div>
+            </form>
+        </div>
+
+        <h3 class="results-heading">Kết Quả Tìm Kiếm Được Đề Xuất Ưu Tiên</h3>
+        <div class="places-grid" id="places-container">
+            </div>
+
+    </main>
+
+    <div class="modal" id="details-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" class="vintage-title" style="margin-bottom: 0.5rem;">Tên Địa Điểm</h2>
+            <p id="modal-meta" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Địa chỉ và điểm số</p>
+            
+            <div id="modal-desc" style="font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                Mô tả chi tiết địa điểm.
+            </div>
+
+            <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 1.5rem 0;">
+
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 1rem;">Viết Đánh Giá Của Bạn</h3>
+            <form id="review-form" onsubmit="handleSumitReview(event)">
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label for="review-rating">Xếp hạng (Sao)</label>
+                        <select id="review-rating" required>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 Sao</option>
+                            <option value="4">⭐⭐⭐⭐ 4 Sao</option>
+                            <option value="3">⭐⭐⭐ 3 Sao</option>
+                            <option value="2">⭐⭐ 2 Sao</option>
+                            <option value="1">⭐ 1 Sao</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-user">Danh tính lữ khách</label>
+                        <input type="text" id="review-user" value="Lữ khách ẩn danh" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="review-comment">Cảm nhận của bạn về nơi này</label>
+                    <textarea id="review-comment" rows="3" placeholder="Chia sẻ trải nghiệm hoài niệm của bạn..." required></textarea>
+                </div>
+                <button type="submit" class="btn-vintage" style="padding: 0.6rem 2rem; font-size: 0.95rem;">Gửi Đánh Giá Hệ Thống</button>
+            </form>
+
+            <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 1.5rem 0;">
+
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Cộng Đồng Thảo Luận</h3>
+            <div id="modal-reviews-list">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Wanderlust Travel. Tích hợp Bản đồ vệ tinh & Hệ thống dữ liệu cộng đồng thời gian thực.</p>
+        <p style="margin-top: 0.4rem; font-size: 0.75rem; opacity: 0.6;">Dữ liệu đánh giá được kiểm duyệt tự động để tránh thông tin sai lệch.</p>
+    </footer>
+
+    <script>
+        // Cơ sở dữ liệu mẫu ban đầu (Ưu tiên sắp xếp theo số lượt đánh giá và sao cao FR-01.6)
+        let initialPlaces = [
+            {
+                id: 1,
+                name: "Hồ Hoàn Kiếm & Đền Ngọc Sơn",
+                type: "landmark",
+                region: "HAN",
+                address: "Trung tâm Quận Hoàn Kiếm, Hà Nội",
+                desc: "Trái tim của thủ đô ngàn năm văn hiến, biểu tượng văn hóa sâu sắc với Tháp Rùa cổ kính nằm yên bình giữa lòng hồ xanh mướt.",
+                rating: 4.9,
+                reviewCount: 1540,
+                icon: "🏛",
+                reviews: [
+                    { user: "Nguyễn An", rating: 5, comment: "Cảnh quan thanh bình hoài niệm, rất thích hợp đi dạo sớm tinh sương." },
+                    { user: "Trần Bình", rating: 4.8, comment: "Điểm đến không thể bỏ qua khi ghé thăm Hà Nội mến yêu." }
+                ]
+            },
+            {
+                id: 2,
+                name: "Chợ Bến Thành Sài Gòn",
+                type: "landmark",
+                region: "SGN",
+                address: "Quận 1, Thành phố Hồ Chí Minh",
+                desc: "Ngôi chợ biểu tượng lâu đời chứng kiến bao thăng trầm lịch sử đô thị phương Nam, nơi hội tụ sản vật tinh hoa kiến trúc độc đáo.",
+                rating: 4.7,
+                reviewCount: 980,
+                icon: "🎪",
+                reviews: [
+                    { user: "Minh Quang", rating: 5, comment: "Nhiều quà lưu niệm đẹp và các sạp đồ ăn đậm chất Nam Bộ." }
+                ]
+            },
+            {
+                id: 3,
+                name: "Quán Ăn Cố Đô - Bún Bò Huế Gốc",
+                type: "restaurant",
+                region: "HAN",
+                address: "65 Phố Huế, Hai Bà Trưng, Hà Nội",
+                desc: "Hương vị nước dùng thanh ngọt nấu chuẩn theo công thức bí truyền cố đô, không gian bài trí bàn ghế tre hoài cổ.",
+                rating: 4.6,
+                reviewCount: 320,
+                icon: "🍲",
+                reviews: [
+                    { user: "Hoàng Yến", rating: 4, comment: "Nước dùng cay cay thơm mùi sả, sợi bún to chuẩn Huế." }
+                ]
+            },
+            {
+                id: 4,
+                name: "Cà Phê Trứng Giảng",
+                type: "cafe",
+                region: "HAN",
+                address: "Ngõ 39 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội",
+                desc: "Nơi khai sinh ra món cà phê trứng trứ danh. Lớp kem trứng ngậy béo hòa quyện hoàn hảo cùng hương vị cafe robusta đậm đặc.",
+                rating: 4.8,
+                reviewCount: 1250,
+                icon: "☕",
+                reviews: [
+                    { user: "John Doe", rating: 5, comment: "Amazing vintage experience. Best egg coffee in town!" }
+                ]
+            }
+        ];
+
+        let currentFilterType = "all";
+        let activePlaceId = null;
+
+        // Hàm khởi tạo hiển thị danh sách ban đầu
+        function renderPlaces(data) {
+            const container = document.getElementById('places-container');
+            container.innerHTML = "";
+
+            if(data.length === 0) {
+                container.innerHTML = `
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <div class="no-data-msg">
+                            <h4>⚠️ Không tìm thấy địa điểm phù hợp (NL-1)</h4>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Hệ thống không tìm thấy kết quả khớp với từ khóa của bạn. Vui lòng thử lại từ khóa khác hoặc thay đổi bộ lọc.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sắp xếp ưu tiên độ phổ biến & đánh giá cao (FR-01.6)
+            data.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
+
+            data.forEach(place => {
+                const card = document.createElement('div');
+                card.className = "place-card";
+                
+                let typeName = "Địa điểm";
+                if(place.type === 'landmark') typeName = "Danh lam";
+                if(place.type === 'restaurant') typeName = "Quán ăn";
+                if(place.type === 'cafe') typeName = "Cà phê";
+
+                card.innerHTML = `
+                    <div class="place-img">
+                        ${place.icon}
+                        <span class="place-tag">${typeName}</span>
+                    </div>
+                    <div class="place-content">
+                        <h4 class="place-title vintage-title">${place.name}</h4>
+                        <div class="place-meta">
+                            <span class="rating-stars">★ ${place.rating.toFixed(1)}</span>
+                            <span>(${place.reviewCount} lượt đánh giá)</span>
+                        </div>
+                        <p class="place-desc">${place.desc.substring(0, 100)}...</p>
+                        <div class="actions-container" style="margin-top:auto;">
+                            <button class="btn-vintage btn-secondary" style="padding: 0.5rem 1rem; font-size:0.85rem;" onclick="openDetails(${place.id})">Xem chi tiết ➔</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Chức năng lọc theo loại địa điểm (RN-1)
+        function filterType(type) {
+            currentFilterType = type;
+            updateStepIndicator(2);
+            executeSearchAndFilter();
+        }
+
+        // Chức năng tìm kiếm tổng hợp (FR-01.1)
+        function handleSearch(event) {
+            event.preventDefault();
+            updateStepIndicator(1);
+            executeSearchAndFilter();
+        }
+
+        function executeSearchAndFilter() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase().trim();
+            const region = document.getElementById('search-region').value;
+
+            let filtered = initialPlaces.filter(place => {
+                // Kiểm tra từ khóa
+                const matchesKeyword = !keyword || place.name.toLowerCase().includes(keyword) || place.desc.toLowerCase().includes(keyword) || place.address.toLowerCase().includes(keyword);
+                // Kiểm tra khu vực
+                const matchesRegion = !region || place.region === region;
+                // Kiểm tra loại địa điểm (RN-1)
+                const matchesType = currentFilterType === 'all' || place.type === currentFilterType;
+
+                return matchesKeyword && matchesRegion && matchesType;
+            });
+
+            renderPlaces(filtered);
+        }
+
+        // Xem chi tiết địa điểm (RN-2 & FR-01.3)
+        function openDetails(id) {
+            activePlaceId = id;
+            const place = initialPlaces.find(p => p.id === id);
+            if(!place) return;
+
+            updateStepIndicator(3);
+
+            document.getElementById('modal-title').innerText = place.name;
+            document.getElementById('modal-meta').innerHTML = `<span class="rating-stars">★ ${place.rating.toFixed(1)}</span> (${place.reviewCount} lượt khách đánh giá) — 📍 ${place.address}`;
+            document.getElementById('modal-desc').innerText = place.desc;
+
+            renderReviewsList(place.reviews);
+
+            document.getElementById('details-modal').classList.add('active');
+        }
+
+        function renderReviewsList(reviews) {
+            const listContainer = document.getElementById('modal-reviews-list');
+            listContainer.innerHTML = "";
+
+            if(reviews.length === 0) {
+                listContainer.innerHTML = `<p style="font-style: italic; color: var(--text-muted); font-size:0.9rem;">Chưa có bình luận nào từ các lữ khách phương xa.</p>`;
+                return;
+            }
+
+            reviews.forEach(r => {
+                const item = document.createElement('div');
+                item.className = "review-item";
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 0.3rem; font-size:0.85rem;">
+                        <strong>✍️ ${r.user}</strong>
+                        <span class="rating-stars">${'★'.repeat(Math.round(r.rating))}</span>
+                    </div>
+                    <p style="font-size:0.9rem; color: var(--text-dark);">${r.comment}</p>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('details-modal').classList.remove('active');
+            document.getElementById('review-form').reset();
+        }
+
+        // Người dùng gửi đánh giá mới & Tự động cập nhật điểm trung bình (FR-01.4 & FR-01.5)
+        function handleSumitReview(event) {
+            event.preventDefault();
+            updateStepIndicator(4);
+
+            const user = document.getElementById('review-user').value.trim();
+            const ratingValue = parseFloat(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-comment').value.trim();
+
+            const place = initialPlaces.find(p => p.id === activePlaceId);
+            if(place) {
+                // Thêm đánh giá mới vào mảng dữ liệu
+                place.reviews.unshift({ user, rating: ratingValue, comment });
+                
+                // Công thức tính toán tự động cập nhật điểm trung bình mới (FR-01.5)
+                const currentTotalScore = place.rating * place.reviewCount;
+                place.reviewCount += 1;
+                place.rating = (currentTotalScore + ratingValue) / place.reviewCount;
+
+                // Đồng bộ và render lại thông tin trên Modal chi tiết
+                document.getElementById('modal-meta').innerHTML = `<span class="rating-stars">★ ${place.rating.toFixed(1)}</span> (${place.reviewCount} lượt khách đánh giá) — 📍 ${place.address}`;
+                renderReviewsList(place.reviews);
+
+                // Cập nhật lại giao diện danh sách bên ngoài
+                executeSearchAndFilter();
+
+                // Reset trường nhập liệu thông báo thành công
+                document.getElementById('review-comment').value = "";
+                alert("Hệ thống Wanderlust đã tiếp nhận đánh giá của bạn thành công! Điểm số trung bình đã được cập nhật.");
+            }
+        }
+
+        // Hàm hiệu ứng thay đổi trạng thái thanh tiến trình giả lập
+        function updateStepIndicator(stepNum) {
+            for(let i = 1; i <= 4; i++) {
+                const el = document.getElementById(`step-${i}`);
+                if(i === stepNum) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            }
+        }
+
+        // Tự động tải danh sách khi tải trang lần đầu
+        window.onload = function() {
+            renderPlaces(initialPlaces);
+        };
+    </script>
+</body>
+</html>

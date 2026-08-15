@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lập Kế Hoạch Du Lịch - Wanderlust</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #F3F0E9;
+            --bg-card: #ffffff;
+            --bg-input: #fcf9f5;
+            --header-bg: #3d2b1f;
+            --header-text: #f5efe6;
+            --primary: #7a5230;
+            --primary-hover: #5d3d22;
+            --primary-light: #f4ece4;
+            --accent-gold: #c59b27;
+            --text-dark: #2c221e;
+            --text-muted: #78695f;
+            --border-color: #d8cbbe;
+            --border-dashed: #c4b5a5;
+            --error-color: #c93b2b;
+            --error-bg: #fdf2f2;
+            --success-color: #278546;
+            --success-bg: #f0fdf4;
+            --warning-color: #d97706;
+            --warning-bg: #fffbe6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            /* Đã bỏ background-image radial-gradient chứa chấm bi */
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER STYLING */
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 26px;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .brand-subtitle {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #c2b2a3;
+            margin-top: 1px;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #d4c5b9;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        nav a.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-gold);
+            border-radius: 1px;
+        }
+
+        .user-greeting {
+            font-size: 13px;
+            color: #c2b2a3;
+            font-weight: 400;
+            border-left: 1px solid #574233;
+            padding-left: 20px;
+        }
+
+        .user-greeting span {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 92%;
+            margin: 35px auto 50px auto;
+        }
+
+        /* STEPPER COMPONENT */
+        .stepper-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 35px;
+            padding: 0 40px;
+        }
+
+        .stepper-progress-line {
+            position: absolute;
+            top: 20px;
+            left: 80px;
+            right: 80px;
+            height: 2px;
+            background-color: #d4c5b9;
+            z-index: 1;
+        }
+
+        .stepper-progress-fill {
+            position: absolute;
+            top: 20px;
+            left: 80px;
+            height: 2px;
+            background-color: var(--primary);
+            z-index: 1;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #eae1d7;
+            color: #78695f;
+            border: 2px solid #d4c5b9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-circle {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(122, 82, 48, 0.2);
+        }
+
+        .step-item.completed .step-circle {
+            background-color: var(--header-bg);
+            color: #ffffff;
+            border-color: var(--header-bg);
+        }
+
+        .step-label {
+            margin-top: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .step-item.active .step-label {
+            color: var(--text-dark);
+        }
+
+        .step-item.completed .step-label {
+            color: var(--header-bg);
+        }
+
+        /* CARD BOX */
+        .card-box {
+            background-color: var(--bg-card);
+            border: 1px dashed var(--border-dashed);
+            border-radius: 6px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(61, 43, 31, 0.04);
+            position: relative;
+        }
+
+        .card-header {
+            border-bottom: 1px solid #ebe2d8;
+            padding-bottom: 18px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle-badge {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* FORM ELEMENTS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #5a4638;
+        }
+
+        label .required {
+            color: var(--error-color);
+            margin-left: 2px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(122, 82, 48, 0.12);
+        }
+
+        input.is-invalid,
+        select.is-invalid {
+            border-color: var(--error-color) !important;
+            background-color: #fff5f5 !important;
+        }
+
+        .error-feedback {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .error-feedback.show {
+            display: flex;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .tag-checkbox {
+            display: none;
+        }
+
+        .tag-label {
+            padding: 8px 16px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tag-checkbox:checked+.tag-label {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* BUTTONS */
+        .form-actions {
+            margin-top: 35px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+            border-top: 1px dashed #ebe2d8;
+            padding-top: 24px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(93, 61, 34, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: #ede6df;
+            color: #5a4638;
+            border: 1px solid #d4c5b9;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2d7cc;
+            color: var(--text-dark);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+        }
+
+        /* LOADING STATE */
+        .ai-loading-state {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .spinner-vintage {
+            width: 54px;
+            height: 54px;
+            border: 3px solid #e8dfd5;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        /* ALERT BANNERS */
+        .alert-box {
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-size: 13.5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.5;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        /* ITINERARY RESULT DISPLAY */
+        .itinerary-summary-bar {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 18px 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .summary-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .timeline-day-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .day-header {
+            background-color: var(--primary-light);
+            padding: 14px 20px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8dfd5;
+        }
+
+        .day-activities {
+            padding: 16px 20px;
+        }
+
+        .activity-slot {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px dashed #efe8df;
+        }
+
+        .activity-slot:last-child {
+            border-bottom: none;
+        }
+
+        .activity-time {
+            width: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            padding-top: 2px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .activity-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .activity-cost {
+            font-size: 12.5px;
+            color: #8c6d53;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* SERVICES GRID */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .service-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 18px;
+            background: var(--bg-input);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--accent-gold);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .service-type {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .service-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .service-desc {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .service-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--header-bg);
+            margin-bottom: 12px;
+        }
+
+        .service-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* PAYMENT & CONFIRMATION */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .payment-method-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .payment-method-card:hover,
+        .payment-method-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .payment-icon {
+            font-size: 24px;
+        }
+
+        .payment-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .payment-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .confirmation-ticket {
+            border: 2px dashed var(--primary);
+            background-color: #faf6f0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .ticket-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .ticket-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px dashed var(--border-dashed);
+            padding: 24px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin-bottom: 4px;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-brand">
+            <a href="index.html" class="brand-logo">Wanderlust</a>
+            <span class="brand-subtitle">Hệ Thống Hỗ Trợ Du Lịch Cổ Điển</span>
+        </div>
+        <!-- ĐÃ CẬP NHẬT LIÊN KẾT TẠI ĐÂY -->
+        <nav>
+            <a href="index.html">Trang chủ</a>
+            <a href="tim_kiem.html">Tìm kiếm địa điểm</a>
+            <a href="lap_ke_hoach.html" class="active">Lập kế hoạch</a>
+            <a href="dat_ve.html">Đặt vé máy bay</a>
+            <a href="dat_phong.html">Đặt phòng</a>
+        </nav>
+        <div class="user-greeting">
+            Chào, <span>Lữ khách phương xa</span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main>
+        <!-- STEPPER COMPONENT -->
+        <div class="stepper-container">
+            <div class="stepper-progress-line"></div>
+            <div class="stepper-progress-fill" id="progress-fill"></div>
+
+            <div class="step-item active" id="step-indicator-1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Thông tin chuyến đi</div>
+            </div>
+            <div class="step-item" id="step-indicator-2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Lịch trình AI</div>
+            </div>
+            <div class="step-item" id="step-indicator-3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Gợi ý dịch vụ</div>
+            </div>
+            <div class="step-item" id="step-indicator-4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Xác nhận & Thanh toán</div>
+            </div>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="card-box">
+            <div id="global-alert-container"></div>
+
+            <!-- STEP 1: FORM INPUT -->
+            <div id="view-step-1" class="view-section active">
+                <div class="card-header">
+                    <h1 class="card-title">✦ Lập Kế Hoạch Du Lịch Thông Minh Cùng AI</h1>
+                    <span class="card-subtitle-badge">Trợ Lý AI</span>
+                </div>
+
+                <form id="travel-plan-form" onsubmit="handleFormSubmit(event)" novalidate>
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="destination">Điểm Đến Chính <span class="required">*</span></label>
+                            <select id="destination" name="destination">
+                                <option value="">-- Chọn điểm đến du lịch --</option>
+                                <option value="Đà Nẵng - Hội An" selected>Đà Nẵng - Hội An</option>
+                                <option value="Phú Quốc">Phú Quốc (Kiên Giang)</option>
+                                <option value="Đà Lạt">Đà Lạt (Lâm Đồng)</option>
+                                <option value="Sa Pa">Sa Pa (Lào Cai)</option>
+                                <option value="Nha Trang">Nha Trang (Khánh Hòa)</option>
+                                <option value="Hà Nội">Hà Nội - Tràng An</option>
+                            </select>
+                            <div class="error-feedback" id="err-destination">Vui lòng chọn điểm đến chính cho chuyến đi.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transport">Phương Tiện Di Chuyển <span class="required">*</span></label>
+                            <select id="transport" name="transport">
+                                <option value="">-- Chọn phương tiện chính --</option>
+                                <option value="Máy bay" selected>Máy bay thương mại</option>
+                                <option value="Tàu hỏa">Tàu hỏa hỏa xa cổ điển</option>
+                                <option value="Xe khách">Xe khách chất lượng cao</option>
+                                <option value="Ô tô tự lái">Ô tô tự lái / Xe cá nhân</option>
+                            </select>
+                            <div class="error-feedback" id="err-transport">Vui lòng lựa chọn phương tiện di chuyển.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-date">Ngày Bắt Đầu <span class="required">*</span></label>
+                            <input type="date" id="start-date" name="startDate" value="2026-10-15" onchange="calculateDays()">
+                            <div class="error-feedback" id="err-start-date">Ngày bắt đầu không được để trống.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end-date">Ngày Kết Thúc <span class="required">*</span></label>
+                            <input type="date" id="end-date" name="endDate" value="2026-10-18" onchange="calculateDays()">
+                            <div class="error-feedback" id="err-end-date">Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stay-days">Số Ngày Cư Trú (Ngày) <span class="required">*</span></label>
+                            <input type="number" id="stay-days" name="stayDays" value="3" min="1" placeholder="Nhập số ngày cư trú">
+                            <div class="error-feedback" id="err-stay-days">Số ngày cư trú phải là số nguyên dương > 0.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total-budget">Tổng Kinh Phí Dự Kiến (VNĐ) <span class="required">*</span></label>
+                            <input type="number" id="total-budget" name="totalBudget" value="15000000" step="500000" min="1" placeholder="Ví dụ: 15000000">
+                            <div class="error-feedback" id="err-total-budget">Tổng kinh phí bắt buộc phải lớn hơn 0 VNĐ.</div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Sở Thích & Phong Cách Chuyến Đi (Tùy chọn bổ sung)</label>
+                            <div class="tags-container">
+                                <input type="checkbox" id="pref-food" class="tag-checkbox" checked>
+                                <label for="pref-food" class="tag-label">🍜 Ẩm thực & Đặc sản</label>
+
+                                <input type="checkbox" id="pref-relax" class="tag-checkbox" checked>
+                                <label for="pref-relax" class="tag-label">🏖 Nghỉ dưỡng & Khách sạn đẹp</label>
+
+                                <input type="checkbox" id="pref-culture" class="tag-checkbox">
+                                <label for="pref-culture" class="tag-label">🏛 Văn hóa & Lịch sử</label>
+
+                                <input type="checkbox" id="pref-nature" class="tag-checkbox">
+                                <label for="pref-nature" class="tag-label">🌲 Thiên nhiên & Check-in</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="btn-submit-plan">
+                            ✦ Bắt Đầu Khởi Tạo Lịch Trình AI →
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- AI PROCESSING LOADING STATE -->
+            <div id="view-loading" class="ai-loading-state">
+                <div class="spinner-vintage"></div>
+                <h2 class="loading-title">Trợ Lý AI Đang Phân Tích Lịch Trình...</h2>
+                <p class="loading-subtitle">Hệ thống đang đóng gói dữ liệu và gửi yêu cầu xử lý...</p>
+            </div>
+
+            <!-- STEP 2: ITINERARY DISPLAY -->
+            <div id="view-step-2" class="view-section">
+                <div class="card-header">
+                    <h1 class="card-title">✦ Lịch Trình Du Lịch Được Đề Xuất Bởi AI</h1>
+                    <span class="card-subtitle-badge" id="itinerary-badge">Phân tích hoàn tất</span>
+                </div>
+
+                <div class="itinerary-summary-bar">
+                    <div class="summary-item">
+                        <span class="summary-label">Điểm Đến</span>
+                        <span class="summary-value" id="sum-destination">Đà Nẵng - Hội An</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Thời Gian</span>
+                        <span class="summary-value" id="sum-duration">3 Ngày 2 Đêm</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Phương Tiện</span>
+                        <span class="summary-value" id="sum-transport">Máyบิน</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Ngân Sách Dự Kiến</span>
+                        <span class="summary-value" id="sum-budget" style="color: var(--primary);">15,000,000 VNĐ</span>
+                    </div>
+                </div>
+
+                <div id="itinerary-timeline-container"></div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="handleEditItinerary()">
+                        ↺ Chỉnh Sửa Thông Tin
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="handleSaveItinerary()">
+                        💾 Lưu Lịch Trình & Tiếp Tục →
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: SERVICE RECOMMENDATIONS -->
+            <div id="view-step-3" class="view-section">
+                <div class="card-header">
+                    <h1 class="card-title">✦ Gợi Ý Dịch Vụ Đi Kèm Phù Hợp Lịch Trình</h1>
+                    <span class="card-subtitle-badge">Gợi ý AI</span>
+                </div>
+
+                <div class="alert-box alert-success">
+                    <span>✓ Lịch trình đã được xác nhận và lưu thành công vào Cơ sở dữ liệu hệ thống.</span>
+                </div>
+
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+                    Dựa trên thông tin chuyến đi đã lưu, hệ thống Wanderlust tự động kết nối và gợi ý các dịch vụ khách sạn & di chuyển tối ưu chi phí dành cho bạn:
+                </p>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <span class="service-badge">Khuyên dùng</span>
+                        <div>
+                            <div class="service-type">🏨 Khách Sạn & Resort</div>
+                            <div class="service-title">Grand Mercure Danang 5★</div>
+                            <div class="service-desc">Phòng Deluxe nhìn ra sông Hàn, bao gồm ăn sáng buffet tự chọn.</div>
+                        </div>
+                        <div>
+                            <div class="service-price">3,200,000 VNĐ / đêm</div>
+                            <label class="service-checkbox-wrapper">
+                                <input type="checkbox" class="svc-select" value="3200000" checked onchange="updateTotalServiceCost()">
+                                <span>Chọn dịch vụ này</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <span class="service-badge">Giảm 10%</span>
+                        <div>
+                            <div class="service-type">✈️ Chuyến Bay Khứ Hồi</div>
+                            <div class="service-title">Vietnam Airlines Express</div>
+                            <div class="service-desc">Vé khứ hồi Hà Nội/SGN ⇄ Đà Nẵng, bao gồm 23kg hành lý gửi.</div>
+                        </div>
+                        <div>
+                            <div class="service-price">4,500,000 VNĐ / khách</div>
+                            <label class="service-checkbox-wrapper">
+                                <input type="checkbox" class="svc-select" value="4500000" checked onchange="updateTotalServiceCost()">
+                                <span>Chọn dịch vụ này</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div>
+                            <div class="service-type">🎟️ Tour & Vé Tham Quan</div>
+                            <div class="service-title">Combo Bà Nà Hills + Cáp Treo</div>
+                            <div class="service-desc">Vé vào cổng Cầu Vàng Bà Nà Hills + Buffet trưa đỉnh núi.</div>
+                        </div>
+                        <div>
+                            <div class="service-price">1,250,000 VNĐ / vé</div>
+                            <label class="service-checkbox-wrapper">
+                                <input type="checkbox" class="svc-select" value="1250000" onchange="updateTotalServiceCost()">
+                                <span>Chọn dịch vụ này</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-input); padding: 16px 20px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <span style="font-weight: 600; font-size: 14px;">Tổng giá trị dịch vụ bổ sung đã chọn:</span>
+                    <span id="total-service-cost" style="font-size: 18px; font-weight: 700; color: var(--primary);">7,700,000 VNĐ</span>
+                </div>
+
+                <div style="text-align: center; margin: 30px 0 10px 0; font-weight: 600; font-size: 15px; color: var(--text-dark);">
+                    Bạn có muốn tiến hành đặt các dịch vụ gợi ý này ngay bây giờ không?
+                </div>
+
+                <div class="form-actions" style="justify-content: center; gap: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="handleDeclineBooking()" id="btn-no-booking">
+                        ✕ Không, Kết thúc & Lưu lịch trình
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="handleProceedBooking()" id="btn-yes-booking">
+                        ✓ Có, Tiến Hành Đặt Dịch Vụ & Thanh Toán →
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 4: PAYMENT & CONFIRMATION -->
+            <div id="view-step-4" class="view-section">
+                <div class="card-header">
+                    <h1 class="card-title">✦ Thanh Toán Dịch Vụ Du Lịch</h1>
+                    <span class="card-subtitle-badge">Cổng Thanh Toán</span>
+                </div>
+
+                <div id="payment-input-area">
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+                        Vui lòng lựa chọn hình thức thanh toán an toàn để hoàn tất giữ chỗ dịch vụ:
+                    </p>
+
+                    <div class="payment-options">
+                        <div class="payment-method-card selected" onclick="selectPaymentMethod(this)">
+                            <div class="payment-icon">💳</div>
+                            <div>
+                                <div class="payment-name">Thẻ ATM / Thẻ Quốc Tế</div>
+                                <div class="payment-sub">Visa, MasterCard, JCB, Napas</div>
+                            </div>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod(this)">
+                            <div class="payment-icon">📱</div>
+                            <div>
+                                <div class="payment-name">Ví Điện Tử MoMo / ZaloPay</div>
+                                <div class="payment-sub">Quét mã QR thanh toán nhanh</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #faf6f0; padding: 16px; border-radius: 6px; border: 1px dashed var(--primary); margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                            <span>Số tiền cần thanh toán:</span>
+                            <span id="pay-amount-display" style="font-weight: 700; font-size: 16px; color: var(--primary);">7,700,000 VNĐ</span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted);">
+                            * Trong khi xử lý thanh toán, hệ thống sẽ tự động khóa các nút bấm tương tác để tránh yêu cầu trùng lặp.
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showStep(3)" id="btn-back-pay">
+                            ← Quay lại
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="executePayment()" id="btn-pay-now">
+                            🔒 Xác Nhận Thanh Toán Ngay
+                        </button>
+                    </div>
+                </div>
+
+                <div id="payment-success-area" style="display: none;">
+                    <div class="confirmation-ticket">
+                        <div class="ticket-icon">📜</div>
+                        <h2 class="ticket-title">XÁC NHẬN LỊCH TRÌNH & ĐẶT DỊCH VỤ THÀNH CÔNG!</h2>
+                        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px;">
+                            Mã kế hoạch: <strong style="color: var(--primary);">WL-2026-PLAN-8892</strong> | Ngày tạo: 15/10/2026
+                        </p>
+                        <div class="alert-box alert-success" style="margin-bottom: 0; text-align: left;">
+                            Giao dịch thanh toán đã thành công. Chi tiết lịch trình và vé dịch vụ đã được ghi nhận vào tài khoản của bạn và gửi qua Email xác nhận!
+                        </div>
+                    </div>
+                    <div class="form-actions" style="justify-content: center;">
+                        <button type="button" class="btn btn-primary" onclick="resetToBeginning()">
+                            ✦ Lập Kế Hoạch Chuyến Đi Mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Wanderlust Travel. Toàn bộ luồng giao tiếp dữ liệu được mã hóa bảo mật qua giao thức HTTPS/TLS.</p>
+        <p>Hệ thống AI lập lịch trình tự động tích hợp thuật toán tối ưu hóa chi phí & trải nghiệm du lịch.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentStep = 1;
+
+        const sampleItineraryData = {
+            destination: "Đà Nẵng - Hội An",
+            durationDays: 3,
+            transport: "Máy bay",
+            budget: 15000000,
+            days: [
+                {
+                    dayNum: 1,
+                    title: "Khám Phá Phố Cổ Hội An & Đêm Đèn Lồng",
+                    activities: [
+                        { time: "Sáng (08:00 - 11:30)", title: "Bay tới Đà Nẵng & Di chuyển về Hội An", desc: "Thủ tục nhận phòng khách sạn, nghỉ ngơi nhẹ và thưởng thức Mỳ Quảng chính gốc.", cost: "Kinh phí: ~500,000 VNĐ" },
+                        { time: "Chiều (14:30 - 17:30)", title: "Tản bộ Phố Cổ & Chùa Cầu", desc: "Tham quan Nhà cổ Tấn Ký, Hội quán Phúc Kiến, thưởng thức cà phê Faifo ngắm toàn cảnh.", cost: "Kinh phí: ~250,000 VNĐ" },
+                        { time: "Tối (18:30 - 21:30)", title: "Đi thuyền thả hoa đăng trên sông Hoài", desc: "Trải nghiệm ẩm thực đêm Phố Cổ: Cao lầu, Bánh đập, Chè hé. Thả đèn lồng nguyện ước.", cost: "Kinh phí: ~400,000 VNĐ" }
+                    ]
+                },
+                {
+                    dayNum: 2,
+                    title: "Chinh Phục Cầu Vàng Bà Nà Hills & Biển Mỹ Khê",
+                    activities: [
+                        { time: "Sáng (07:30 - 12:00)", title: "Tham quan Bà Nà Hills & Cầu Vàng", desc: "Trải nghiệm cáp treo đạt kỷ lục thế giới, check-in Cầu Vàng trong sương sớm, Công viên Fantasy.", cost: "Kinh phí: ~1,250,000 VNĐ" },
+                        { time: "Chiều (14:30 - 17:30)", title: "Tắm biển Mỹ Khê & Bán Đảo Sơn Trà", desc: "Tắm biển Mỹ Khê (Top 6 biển đẹp nhất hành tinh), viếng Chùa Linh Ứng ngắm Phật Bà 67m.", cost: "Kinh phí: ~150,000 VNĐ" },
+                        { time: "Tối (18:30 - 21:30)", title: "Thưởng thức Hải sản & Ngắm Cầu Rồng Phun Lửa", desc: "Ăn tối hải sản tươi sống bên bờ biển, xem Cầu Rồng phun lửa & phun nước (cuối tuần).", cost: "Kinh phí: ~750,000 VNĐ" }
+                    ]
+                },
+                {
+                    dayNum: 3,
+                    title: "Danh Thắng Ngũ Hành Sơn & Mua Sắm Đặc Sản",
+                    activities: [
+                        { time: "Sáng (08:00 - 11:00)", title: "Tham quan Danh thắng Ngũ Hành Sơn", desc: "Khám phá Động Huyền Không, Chùa Tam Thai, Làng đá mỹ nghệ Non Nước.", cost: "Kinh phí: ~200,000 VNĐ" },
+                        { time: "Chiều (12:00 - 15:00)", title: "Mua sắm tại Chợ Hàn & Ra sân bay", desc: "Mua đặc sản Chả bò Đà Nẵng, mực một nắng làm quà. Di chuyển ra sân bay kết thúc chuyến đi.", cost: "Kinh phí: ~1,000,000 VNĐ" }
+                    ]
+                }
+            ]
+        };
+
+        function showGlobalAlert(message, type = 'error') {
+            const container = document.getElementById('global-alert-container');
+            const alertClass = type === 'error' ? 'alert-error' : (type === 'warning' ? 'alert-warning' : 'alert-success');
+            const icon = type === 'error' ? '⛔' : (type === 'warning' ? '⚠️' : '✓');
+
+            container.innerHTML = `
+                <div class="alert-box ${alertClass}">
+                    <span>${icon} ${message}</span>
+                </div>
+            `;
+        }
+
+        function clearGlobalAlert() {
+            document.getElementById('global-alert-container').innerHTML = '';
+        }
+
+        function calculateDays() {
+            const startInput = document.getElementById('start-date').value;
+            const endInput = document.getElementById('end-date').value;
+
+            if (startInput && endInput) {
+                const start = new Date(startInput);
+                const end = new Date(endInput);
+                const diffTime = end - start;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                if (diffDays > 0) {
+                    document.getElementById('stay-days').value = diffDays;
+                }
+            }
+        }
+
+        function showStep(stepNum) {
+            currentStep = stepNum;
+            clearGlobalAlert();
+
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-loading').style.display = 'none';
+
+            document.getElementById(`view-step-${stepNum}`).classList.add('active');
+
+            const progressFill = document.getElementById('progress-fill');
+            const fillWidths = ['0%', '33.3%', '66.6%', '100%'];
+            progressFill.style.width = fillWidths[stepNum - 1];
+
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                indicator.classList.remove('active', 'completed');
+                if (i < stepNum) {
+                    indicator.classList.add('completed');
+                } else if (i === stepNum) {
+                    indicator.classList.add('active');
+                }
+            }
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            clearGlobalAlert();
+
+            const dest = document.getElementById('destination').value.trim();
+            const transport = document.getElementById('transport').value.trim();
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const stayDays = parseInt(document.getElementById('stay-days').value, 10);
+            const totalBudget = parseFloat(document.getElementById('total-budget').value);
+
+            let isValid = true;
+
+            document.querySelectorAll('.form-group input, .form-group select').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.error-feedback').forEach(el => el.classList.remove('show'));
+
+            if (!dest) {
+                document.getElementById('destination').classList.add('is-invalid');
+                document.getElementById('err-destination').classList.add('show');
+                isValid = false;
+            }
+
+            if (!transport) {
+                document.getElementById('transport').classList.add('is-invalid');
+                document.getElementById('err-transport').classList.add('show');
+                isValid = false;
+            }
+
+            if (!startDate) {
+                document.getElementById('start-date').classList.add('is-invalid');
+                document.getElementById('err-start-date').classList.add('show');
+                isValid = false;
+            }
+            if (!endDate || new Date(endDate) < new Date(startDate)) {
+                document.getElementById('end-date').classList.add('is-invalid');
+                document.getElementById('err-end-date').classList.add('show');
+                isValid = false;
+            }
+
+            if (isNaN(stayDays) || stayDays <= 0) {
+                document.getElementById('stay-days').classList.add('is-invalid');
+                document.getElementById('err-stay-days').classList.add('show');
+                isValid = false;
+            }
+
+            if (isNaN(totalBudget) || totalBudget <= 0) {
+                document.getElementById('total-budget').classList.add('is-invalid');
+                document.getElementById('err-total-budget').classList.add('show');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                showGlobalAlert('<strong>Dữ liệu nhập không hợp lệ.</strong> Vui lòng kiểm tra lại các ô bị đánh dấu đỏ.', 'error');
+                return;
+            }
+
+            triggerAiProcessing(dest, transport, stayDays, totalBudget);
+        }
+
+        function triggerAiProcessing(dest, transport, stayDays, totalBudget) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-loading').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('view-loading').style.display = 'none';
+                renderItineraryView(dest, transport, stayDays, totalBudget);
+                showStep(2);
+            }, 1200);
+        }
+
+        function renderItineraryView(dest, transport, stayDays, totalBudget) {
+            document.getElementById('sum-destination').innerText = dest;
+            document.getElementById('sum-duration').innerText = `${stayDays} Ngày ${stayDays - 1} Đêm`;
+            document.getElementById('sum-transport').innerText = transport;
+            document.getElementById('sum-budget').innerText = totalBudget.toLocaleString('vi-VN') + ' VNĐ';
+
+            const container = document.getElementById('itinerary-timeline-container');
+            container.innerHTML = '';
+
+            for (let d = 1; d <= stayDays; d++) {
+                const dayData = sampleItineraryData.days[(d - 1) % sampleItineraryData.days.length];
+                let activitiesHtml = '';
+
+                dayData.activities.forEach(act => {
+                    activitiesHtml += `
+                        <div class="activity-slot">
+                            <div class="activity-time">${act.time}</div>
+                            <div class="activity-content">
+                                <div class="activity-title">${act.title}</div>
+                                <div class="activity-desc">${act.desc}</div>
+                                <div class="activity-cost">${act.cost}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const dayCard = document.createElement('div');
+                dayCard.className = 'timeline-day-card';
+                dayCard.innerHTML = `
+                    <div class="day-header">
+                        <span>NGÀY ${d}: ${dayData.title}</span>
+                        <span style="font-size: 13px; font-weight: 500;">Dự kiến: ~2,200,000 VNĐ</span>
+                    </div>
+                    <div class="day-activities">
+                        ${activitiesHtml}
+                    </div>
+                `;
+                container.appendChild(dayCard);
+            }
+        }
+
+        function handleEditItinerary() {
+            showStep(1);
+        }
+
+        function handleSaveItinerary() {
+            showStep(3);
+        }
+
+        function updateTotalServiceCost() {
+            let total = 0;
+            document.querySelectorAll('.svc-select:checked').forEach(cb => {
+                total += parseFloat(cb.value);
+            });
+            document.getElementById('total-service-cost').innerText = total.toLocaleString('vi-VN') + ' VNĐ';
+            document.getElementById('pay-amount-display').innerText = total.toLocaleString('vi-VN') + ' VNĐ';
+        }
+
+        function handleDeclineBooking() {
+            showStep(4);
+            document.getElementById('payment-input-area').style.display = 'none';
+            document.getElementById('payment-success-area').style.display = 'block';
+        }
+
+        function handleProceedBooking() {
+            showStep(4);
+            document.getElementById('payment-input-area').style.display = 'block';
+            document.getElementById('payment-success-area').style.display = 'none';
+        }
+
+        function selectPaymentMethod(cardElement) {
+            document.querySelectorAll('.payment-method-card').forEach(el => el.classList.remove('selected'));
+            cardElement.classList.add('selected');
+        }
+
+        function executePayment() {
+            clearGlobalAlert();
+            const btnPay = document.getElementById('btn-pay-now');
+            const btnBack = document.getElementById('btn-back-pay');
+
+            btnPay.disabled = true;
+            btnBack.disabled = true;
+            btnPay.innerText = '⏳ Đang Xử Lý Thanh Toán...';
+
+            setTimeout(() => {
+                document.getElementById('payment-input-area').style.display = 'none';
+                document.getElementById('payment-success-area').style.display = 'block';
+                showGlobalAlert('✓ Giao dịch thanh toán thành công!', 'success');
+            }, 1500);
+        }
+
+        function resetToBeginning() {
+            showStep(1);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateTotalServiceCost();
+        });
+    </script>
+</body>
+
+</html>
